@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>A-Frame Navigation</title>
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script>
+      const objectToPos = obj =>
+        `${obj.getAttribute('position').x} ${obj.getAttribute('position').y} ${obj.getAttribute('position').z}`;
+
+      const setupHandler = () => {
+        const camera = document.getElementById('camera');
+        const targetList = document.querySelectorAll('.moveCamera');
+        targetList.forEach(target => {
+          target.addEventListener('click', () => {
+            camera.setAttribute('animation', `property: position; to: ${objectToPos(target)}; dur: 700`);
+          });
+        });
+      };
+
+      const setupHandlerActTwo = () => {
+        const camera = document.getElementById('camera');
+        const ground = document.getElementById('ground');
+        ground.addEventListener('click', e => {
+          const posTo = `${e.detail.intersection.point.x} 1 ${e.detail.intersection.point.z}`;
+          camera.setAttribute('animation', `property: position; to: ${posTo}; dur: 700`);
+        });
+      };
+
+      window.onload = () => {
+        setupHandler();
+        setupHandlerActTwo();
+      };
+    </script>
+  </head>
+  <body>
+    <a-scene>
+      <a-entity>
+        <a-camera id="camera">
+          <a-entity
+            cursor
+            position="0 0 -1"
+            geometry="primitive: sphere; radius: 0.005"
+            material="color: #000000; shader: flat; opacity: 0.5">
+          </a-entity>
+        </a-camera>
+      </a-entity>
+
+      <a-sphere color="#00ff00" position="5 1 0" class="moveCamera"></a-sphere>
+
+      <a-sphere color="#00ff00" position="-5 1 0" class="moveCamera"></a-sphere>
+
+      <a-plane material="color: #999999" rotation="-90 0 0" scale="20 20 0" id="ground"></a-plane>
+    </a-scene>
+  </body>
+</html>
